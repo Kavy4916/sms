@@ -16,7 +16,7 @@ function TeacherDashboard() {
   useEffect(() => {
     const fetch = async () => {
       api
-        .get("/teacher/getSubject")
+        .get("/teacher/course/all")
         .then((response) => {
           if (response.data.message) {
             setMessage(response.data.message);

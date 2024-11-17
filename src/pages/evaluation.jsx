@@ -45,7 +45,7 @@ const Evaluation = () => {
       {!loading && !message && result && (
         <>
           <ShowDetail detail={result.detail} />
-          <Table data={result.payload} link={result.link} />
+          <Table data={result.payload} link={result.link} heading={"Evaluation Report"}/>
         </>
       )}
       {!loading && message && <Message text={message} />}

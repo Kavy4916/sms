@@ -48,7 +48,7 @@ const TeacherChangePassword = () => {
     <TeacherNavbar />
     {message && <Message text={message} />}
     {!message && (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+    <div className="flex items-center justify-center py-16">
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-white p-6 sm:p-8 rounded-2xl shadow-lg transform transition-all hover:shadow-2xl">
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">Change Password</h2>
         <form onSubmit={handleSubmit}>

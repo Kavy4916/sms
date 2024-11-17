@@ -95,7 +95,7 @@ const Register = () => {
   const tableHeading = "You are enrolling in the following courses";
 
   return (
-    <div className=" bg-gray-200 min-h-screen">
+    <div className="bg-gray-100">
       <Navbar />
       {loading && <Loader />}
       {!loading && message && <Message text={message} />}
@@ -108,7 +108,7 @@ const Register = () => {
       
       {!loading && data && data.enrolling && (
         <div>
-          <div className="flex items-center justify-center m-4 sm:m-2  bg-gray-200">
+          <div className="flex items-center justify-center m-4 sm:m-2  bg-gray-100">
             <div className=" w-full max-w-sm sm:max-w-sm md:max-w-md lg:max-w-lg bg-white p-6 sm:p-8 rounded-2xl shadow-lg transform transition-all hover:shadow-2xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
                 Enroll

@@ -1,144 +1,225 @@
-import React, { useEffect, useState }  from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/teacherNavbar.jsx";
 import api from "../utils/connection.js";
 import Loader from "../components/loader.jsx";
-import Table from "../components/table.jsx";
-import ShowDetail from "../components/showDetail.jsx"
+import ShowDetail from "../components/showDetail.jsx";
+import Message from "../components/message.jsx";
 
-function TeacherCourseDetail(){
+function TeacherCourseDetail() {
+  const { teachesId } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [attendance, setAttendance] = useState({
+    attendance: [{}],
+    attendanceLink: [],
+  });
+  const [classCount, setClassCount] = useState(null);
+  const [evaluation, setEvaluation] = useState({
+    evaluation: [{}],
+    evaluationLink: [],
+  });
+  const [totalMarks, setTotalMarks] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const attendanceColumn = Object.keys(attendance.attendance[0] || {});
+  const evaluationColumn = Object.keys(evaluation.evaluation[0] || {});
 
-    const {teachesId} = useParams();
-    const [timing, setTiming] = useState("");
-    const [purpose, setPurpose] = useState("");
-    const [type, setType] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [attendance, setAttendance] = useState(null);
-    const [classCount, setClassCount] = useState(null);
-    const [evaluation, setEvaluation] = useState(null);
-    const [totalMarks, setTotalMarks] = useState(null);
-    const [detail, setDetail] = useState(null);
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await api.get("/teacher/course/detail", {
+        params: {
+          teachesId,
+        },
+      });
+      setAttendance(response.data.attendance);
+      setClassCount(response.data.classCount);
+      setEvaluation(response.data.evaluation);
+      setTotalMarks(response.data.totalMarks);
+      setDetail(response.data.detail);
+      setLoading(false);
+    };
+    fetch();
+  }, [teachesId]);
 
-    useEffect(()=>{
-      const fetch = async ()=>{
-        const response = await api.get("/teacher/courseDetail",{
-          params: {
-            teachesId
-          }
-        });
-        setAttendance(response.data.attendance);
-        setClassCount(response.data.classCount);
-        setEvaluation(response.data.evaluation);
-        setTotalMarks(response.data.totalMarks);
-        setDetail(response.data.detail);
-        setLoading(false);
-      }
-      fetch();
-    },[teachesId]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Implement submit functionality here (e.g., API call to save class data)
-        console.log({ timing, purpose, type});
-        alert("Class created successfully!");
-      }; 
-          
-      if(loading) return <Loader />
-          return (
-          <>
-          <Navbar/>
-          <ShowDetail
-            detail={detail}
-          />
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-6 text-center">Attendance Report</h1>
-          <h2 className="text-xl font-semibold text-gray-800 my-2 text-center">Total Classes : {classCount}</h2>
-          <Table
-            data={attendance.attendance}
-            link={attendance.attendanceLink}
-          />
-          <br/>
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-4 text-center">Evaluation Report</h1>
-          <h2 className="text-xl font-semibold text-gray-800 my-2 text-center">Total Marks : {totalMarks}</h2>
-          <Table
-            data={evaluation.evaluation}
-            link={evaluation.evaluationLink}
-          />
-            <div className="flex items-center justify-center min-h-auto bg-gray-100 p-4 mt-32">
-              <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create a Class</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-gray-700 font-medium mb-1" htmlFor="type">Class Type</label>
-                    <select
-                      id="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-                      required
-                    >
-                          <option value="" disabled>
-                -- Select the type--
-              </option>
-              <option value="Lecture" >Lecture</option>
-              <option value="Tutorial">Tutorial</option>
-              <option value="Practical">Practical</option>
-                    </select>
-                  </div>
-        
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1" htmlFor="timing"> Class Timing</label>
-                    <select
-              id="timing"
-              value={timing}
-              onChange={(e)=>setTiming(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400"
-              required
-            >
-              <option value="" disabled>
-                -- Select the timing--
-              </option>
-              <option value="8:30 AM-9:25 AM" >8:30 AM-9:25 AM</option>
-              <option value="9:30 AM-10:25 AM">9:30 AM-10:25 AM</option>
-              <option value="10:30 AM-11:25 AM">10:30 AM-11:25 AM</option>
-              <option value="11:30 AM-12:25 PM">11:30 AM-12:25 PM</option>
-              <option value="01:30 PM-02:25 PM">01:30 PM-02:25 PM</option>
-              <option value="02:30 PM-03:25 PM">02:30 PM-03:25 PM</option>
-              <option value="03:30 PM-04:25 PM">03:30 PM-04:25 PM</option>
-              <option value="04:30 PM-05:25 PM">04:30 PM-05:25 PM</option>
-              <option value="08:30 AM-10:25 AM">08:30 AM-10:25 AM</option>
-              <option value="10:30 AM-12:25 PM">10:30 AM-12:25 PM</option>
-              <option value="01:30 PM-03:25 PM">01:30 PM-03:25 PM</option>
-              <option value="03:30 PM-05:25 PM">03:30 PM-05:25 PM</option>
-            </select>
-                  </div>
-        
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1" htmlFor="purpose">Description</label>
-                    <input
-                    id="purpose"
-                      value={purpose}
-                      type="text"
-                      onChange={(e) => setPurpose(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-                      placeholder="Enter Topic Discussed in Class"
-                      rows="4"
-                      required
-                    ></input>
-                  </div>
-        
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      className="px-6 py-2 font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    >
-                      Create Class
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            </>
-            )
+  if (loading) return <Loader />;
+  return (
+    <>
+      <Navbar />
+      <div className="grid grid-cols-2 lg:grid-cols-4 h-auto text-xl">
+        <Link to={`/teacher/class/create/${teachesId}`}>
+          <div className="bg-gray-300 text-center font-semibold p-1 border border-gray-500">
+            Create Class
+          </div>
+        </Link>
+        <Link to={`/teacher/class/all/${teachesId}`}>
+          <div className="bg-gray-300 text-center font-semibold p-1 border border-gray-500">
+            Update Class
+          </div>
+        </Link>
+        <Link to={`/teacher/exam/create/${teachesId}`}>
+          <div className="bg-gray-300 text-center font-semibold p-1 border border-gray-500">
+            Create Exam
+          </div>
+        </Link>
+        <Link to={`/teacher/exam/all/${teachesId}`}>
+          <div className="bg-gray-300 text-center font-semibold p-1 border border-gray-500">
+            Update Exam
+          </div>
+        </Link>
+      </div>
+      <ShowDetail detail={detail} />
+      <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-6 text-center">
+        Attendance Report
+      </h1>
+      <h2 className="text-xl font-semibold text-gray-800 my-2 text-center">
+        Total Classes : {classCount}
+      </h2>
+      {attendance.attendance.length ? (
+        <div className="overflow-x-auto whitespace-nowrap">
+          <table className="min-w-full table-auto border-collapse border border-gray-200">
+            <thead>
+              <tr className="bg-gray-100">
+                {attendanceColumn.map((col, index) => (
+                  <th
+                    key={index}
+                    className="px-4 py-2 border border-gray-200 text-left text-gray-900"
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {attendance.attendance.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className="hover:bg-gray-50 font-semibold text-gray-800"
+                >
+                  {attendanceColumn.map((col, colIndex) => {
+                    if (
+                      attendanceColumn[colIndex] === "See Detail" ||
+                      attendanceColumn[colIndex] === "Update"
+                    ) {
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 color-blue-500 border border-gray-200"
+                        >
+                          <Link to={attendance.attendanceLink[rowIndex]}>
+                            {row[col]}
+                          </Link>
+                        </td>
+                      );
+                    } else if (attendanceColumn[colIndex] === "Percent") {
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 color-blue-500 border border-gray-200"
+                        >
+                          <div
+                            className={`${
+                              row[col] >= 75 ? "bg-success" : "bg-danger"
+                            } w-12 lg:w-16 rounded text-center p-1 font-semibold text-white`}
+                          >
+                            {row[col] + " %"}
+                          </div>
+                        </td>
+                      );
+                    } else
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 border border-gray-200"
+                        >
+                          {row[col]}
+                        </td>
+                      );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <Message text={"Nothing to show."} />
+      )}
+      <br />
+      <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-4 text-center">
+        Evaluation Report
+      </h1>
+      <h2 className="text-xl font-semibold text-gray-800 my-2 text-center">
+        Total Marks : {totalMarks}
+      </h2>
+      {evaluation.evaluation.length ? (
+        <div className="overflow-x-auto whitespace-nowrap">
+          <table className="min-w-full table-auto border-collapse border border-gray-200">
+            <thead>
+              <tr className="bg-gray-100">
+                {evaluationColumn.map((col, index) => (
+                  <th
+                    key={index}
+                    className="px-4 py-2 border border-gray-200 text-left text-gray-900"
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {evaluation.evaluation.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className="hover:bg-gray-50 font-semibold text-gray-800"
+                >
+                  {evaluationColumn.map((col, colIndex) => {
+                    if (
+                      evaluationColumn[colIndex] === "See Detail" ||
+                      evaluationColumn[colIndex] === "Update"
+                    ) {
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 color-blue-500 border border-gray-200"
+                        >
+                          <Link to={evaluation.evaluationLink[rowIndex]}>
+                            {row[col]}
+                          </Link>
+                        </td>
+                      );
+                    } else if (evaluationColumn[colIndex] === "Percent") {
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 color-blue-500 border border-gray-200"
+                        >
+                          <div
+                            className={`${
+                              row[col] >= 40 ? "bg-success" : "bg-danger"
+                            } w-12 lg:w-16 rounded text-center p-1 font-semibold text-white`}
+                          >
+                            {row[col] + " %"}
+                          </div>
+                        </td>
+                      );
+                    } else
+                      return (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-2 border border-gray-200"
+                        >
+                          {row[col]}
+                        </td>
+                      );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <Message text={"Nothing to show."} />
+      )}
+    </>
+  );
 }
 
 export default TeacherCourseDetail;

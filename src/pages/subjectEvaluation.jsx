@@ -18,15 +18,11 @@ const SubjectEvaluation = () => {
   useEffect(() => {
     const fetch = async () => {
       api
-        .post("/student/subjectEvaluation", {subjectId })
+        .get("/student/evaluation/subject", {
+          params: { subjectId },
+        })
         .then((response) => {
           if (response.data.payload.length) {
-            response.data.payload = response.data.payload.map((element) => ({
-              ...element,
-              "Exam-Date": new Date(element["Exam-Date"]).toLocaleDateString(
-                "en-GB"
-              ),
-            }));
             setResult(response.data);
             setLoading(false);
           } else {
@@ -45,20 +41,17 @@ const SubjectEvaluation = () => {
     fetch();
   }, [navigate, subjectId]);
 
-  return (
-    <div className="bg-gray-100">
-      <Navbar />
-      {loading && <Loader />}
-      {!loading && !message && result && (
-        <>
-          <ShowDetail detail={result.detail} />
-          <Table data={result.payload} />
-        </>
-      )}
-      {!loading && message && <Message text={message} />}
-      {!loading && error && <Message text={error} />}
-    </div>
-  );
+  if (loading) return <Loader />;
+  else if (message) return <Message text={message} />;
+  else if (error) return <Message text={error} />;
+  else
+    return (
+      <div className="bg-gray-100">
+        <Navbar />
+        <ShowDetail detail={result.detail} />
+        <Table data={result.payload} heading={"Subject Evaluation Report"} />
+      </div>
+    );
 };
 
 export default SubjectEvaluation;

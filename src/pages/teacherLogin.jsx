@@ -30,7 +30,7 @@ const TeacherLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200 flex-col">
+    <div className="flex items-center justify-center min-h-screen flex-col">
       <Notice />
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-white p-4 sm:p-6 rounded-2xl shadow-lg transform transition-all hover:shadow-2xl">
         <img

@@ -6,7 +6,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className="bg-gray-800 text-white sticky top-0 z-50">
+    <nav className="sticky bg-gray-800 text-white fixed top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -19,6 +19,7 @@ const Navbar = () => {
             <Link to="/changePassword" className="hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Change Password</Link>
             <Link to="/register" className="hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Register</Link>
             <Link to="/evaluation" className="hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Evaluation</Link>
+            <Link to="/attendance" className="hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Attendance</Link>
             <Link to="/logout" className="hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Logout</Link>
           </div>
           <div className="md:hidden flex items-center">
@@ -42,6 +43,7 @@ const Navbar = () => {
             <Link to="/changePassword" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Change Password</Link>
             <Link to="/register" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Register</Link>
             <Link to="/evaluation" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Evaluation</Link>
+            <Link to="/attendance" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Attendance</Link>
             <Link to="/logout" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Logout</Link>          
           </div>
         </div>
