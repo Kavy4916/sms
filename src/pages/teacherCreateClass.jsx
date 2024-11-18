@@ -22,6 +22,7 @@ const CreateClass = () => {
   const column = Object.keys(attendance[0]);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       try {
         const response = await api.get("/teacher/class/create", {
@@ -43,6 +44,7 @@ const CreateClass = () => {
     e.preventDefault();
     const response = await api.post("/teacher/class/create", {attendance, time: timing, date, purpose: topic, type, teachesId});
     if(response?.data === "created"){
+      window.scrollTo(0,0);
       setMessage("Created Successfully");
       setTimeout(()=>{setMessage(null); navigate(-1)}, 2000);
   }

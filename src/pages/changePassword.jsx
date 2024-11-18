@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useChangePassword from '../hooks/useChangePassword.jsx';
 import Navbar from "../components/navbar.jsx";
 import Message from "../components/message.jsx";
+import api from '../utils/connection.js';
+import { useNavigate } from 'react-router-dom';
+
 
 const ChangePassword = () => {
 
   const {changePassword, error, message} = useChangePassword();
 
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    window.scrollTo(0,0);
+    const fetch = async () => {
+      api
+        .get("/student/check")
+        .then(() => {
+        })
+        .catch((error) => {
+          navigate("/login");
+        });
+    };
+    fetch();
+  }, [navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
     changePassword(password, newPassword, confirmPassword);
   };
 

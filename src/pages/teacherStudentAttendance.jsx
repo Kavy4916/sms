@@ -15,6 +15,7 @@ const TeacherStudentAttendance = () => {
   const column = Object.keys(attendance[0]);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       const response = await api.get("/teacher/student/attendance", {
         params: { teachesId, studentId },

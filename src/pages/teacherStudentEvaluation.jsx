@@ -17,6 +17,7 @@ const TeacherStudentEvaluation = () => {
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       const response = await api.get("/teacher/student/evaluation", {
         params: { teachesId, studentId },

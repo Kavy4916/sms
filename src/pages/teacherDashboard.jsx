@@ -14,6 +14,7 @@ function TeacherDashboard() {
   const [teacher, setTeacher] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       api
         .get("/teacher/course/all")

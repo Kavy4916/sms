@@ -16,6 +16,7 @@ const SubjectEvaluation = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       api
         .get("/student/evaluation/subject", {

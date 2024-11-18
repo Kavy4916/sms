@@ -18,6 +18,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       api
         .get("/student/detail", {})

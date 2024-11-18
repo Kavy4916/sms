@@ -24,6 +24,7 @@ function TeacherCourseDetail() {
   const evaluationColumn = Object.keys(evaluation.evaluation[0] || {});
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       const response = await api.get("/teacher/course/detail", {
         params: {

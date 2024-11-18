@@ -20,6 +20,7 @@ const TeacherCreateExam = () => {
   const column = Object.keys(result[0]);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       try {
         const response = await api.get("/teacher/exam/create", {
@@ -39,6 +40,7 @@ const TeacherCreateExam = () => {
     e.preventDefault();
     const response = await api.post("/teacher/exam/create", {result, name: exam, maxMarks, date, teachesId});
     if(response?.data === "created"){
+      window.scrollTo(0,0);
       setMessage("Created Successfully");
       setTimeout(()=>{setMessage(null); navigate(-1)}, 2000);
   }
@@ -91,7 +93,7 @@ const TeacherCreateExam = () => {
                 type="text"
                 onChange={(e) => setExam(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-                placeholder="Enter Topic Discussed in Class"
+                placeholder="Enter Exam"
                 minLength={5}
                 maxLength={50}
                 required
@@ -112,9 +114,9 @@ const TeacherCreateExam = () => {
                 onWheel={(e) => e.target.blur()} 
                 onChange={(e) => setMaxMarks(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-                placeholder="Enter Topic Discussed in Class"
+                placeholder="Enter Maximum Marks"
                 min={0}
-                maxLength={100}
+                max={100}
                 required
               ></input>
             </div>

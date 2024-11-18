@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TeacherNavbar from "../components/teacherNavbar.jsx";
 import Message from "../components/message.jsx";
 import api from '../utils/connection.js';
@@ -12,6 +12,20 @@ const TeacherChangePassword = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0,0);
+    const fetch = async () => {
+      api
+        .get("/teacher/check")
+        .then(() => {
+        })
+        .catch((error) => {
+          navigate("/teacher/login");
+        });
+    };
+    fetch();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +41,7 @@ const TeacherChangePassword = () => {
           }, 3000);
         }
         else{
-          setMessage(response.success);
+          setMessage(response.data.success);
           setTimeout(() => {
             navigate("/teacher");
           }, 3000);

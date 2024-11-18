@@ -12,14 +12,17 @@ const TeacherUpdateExam = () => {
   const examId = query.split("_")[1];
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [result, setResult] = useState([{}]);
   const [detail, setDetail] = useState(null);
   const [tableData, setTableData] = useState(null);
   const [checked, setChecked] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const column = Object.keys(result[0]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetch = async () => {
       try {
         const response = await api.get("/teacher/exam/update", {
@@ -56,6 +59,10 @@ const TeacherUpdateExam = () => {
       teachesId,
     });
     if (response.data === "updated") {
+      setSuccess("Exam updated successfully");
+      setTimeout(() => {
+        setSuccess(null);
+      }, 2000);
       response = await api.get("/teacher/exam/update", {
         params: { teachesId, examId },
       });
@@ -93,29 +100,47 @@ const TeacherUpdateExam = () => {
 
   const handelResultUpdate = async (e) => {
     e.preventDefault();
-    const studentId = e.target.name;
-    const index = e.target.id;
-    const mark = e.target.value;
-    const response = await api.post("/teacher/exam/mark/update", {
-      studentId,
-      mark,
-      examId,
-      teachesId,
-    });
-    if (response.data === "updated") {
-      setResult((prev) => {
-        if (
-          index < 0 ||
-          index >= result.length ||
-          mark < 0 ||
-          mark > detail["Max Marks"]
-        )
-          return prev;
-        const updatedData = [...prev];
-        updatedData[index] = { ...updatedData[index], Marks: mark };
-        return updatedData;
+    if (!processing) {
+      setProcessing(true);
+      const studentId = e.target.name;
+      const index = e.target.id;
+      const mark = e.target.value;
+      if (
+        index < 0 ||
+        index >= result.length ||
+        mark < 0 ||
+        mark > detail["Max Marks"]
+      )
+        return;
+      const response = await api.post("/teacher/exam/mark/update", {
+        studentId,
+        mark,
+        examId,
+        teachesId,
       });
+      if (response.data === "updated") {
+        setResult((prev) => {
+          const updatedData = [...prev];
+          updatedData[index] = {
+            ...updatedData[index],
+            Marks: mark,
+            Update: "Updated",
+          };
+          return updatedData;
+        });
+        setTimeout(() => {
+          setResult((prev) => {
+            const updatedData = [...prev];
+            updatedData[index] = {
+              ...updatedData[index],
+              Update: "Update",
+            };
+            return updatedData;
+          });
+        },2000);
+      }
     }
+    setProcessing(false);
   };
 
   const handelDelete = async (e) => {
@@ -126,6 +151,7 @@ const TeacherUpdateExam = () => {
         teachesId,
       });
       if (response?.data === "deleted") {
+        window.scrollTo(0, 0);
         setMessage("Deleted Successfully");
         setTimeout(() => {
           setMessage(null);
@@ -144,7 +170,7 @@ const TeacherUpdateExam = () => {
   return (
     <>
       <Navbar />
-      <ShowDetail detail={tableData}/>
+      <ShowDetail detail={tableData} />
       <form className="bg-gary-100 rounded-lg p-6 w-full mx-auto">
         <h2 className="text-xl font-semibold text-black-900 text-center p-1 m-1">
           Edit Exam
@@ -197,7 +223,7 @@ const TeacherUpdateExam = () => {
                 min={5}
                 max={100}
                 value={detail["Max Marks"]}
-                onWheel={(e)=>e.target.blur()}
+                onWheel={(e) => e.target.blur()}
                 onChange={(e) =>
                   setDetail((prev) => {
                     return { ...prev, "Max Marks": e.target.value };
@@ -209,6 +235,11 @@ const TeacherUpdateExam = () => {
             </div>
           </div>
         </div>
+        {success && (
+          <p className="w-full px-3 py-2 sm:py-3 text-center text-green-500 text-md my-1">
+            {success}
+          </p>
+        )}
         <div className=" mt-4 lg:flex lg:justify-around">
           <button
             type="button"
@@ -243,9 +274,9 @@ const TeacherUpdateExam = () => {
           </div>
         </div>
       </form>
-      <hr className="my-4 border-gray-300"/>
+      <hr className="my-4 border-gray-300" />
       <h2 className="text-xl mt-4 font-semibold text-black-900 text-center p-1 m-1">
-        Result 
+        Result
       </h2>
       <div className="overflow-x-auto whitespace-nowrap">
         <table className="min-w-full table-auto border-collapse border border-gray-200">
@@ -264,46 +295,34 @@ const TeacherUpdateExam = () => {
           <tbody>
             {result.map((row, rowIndex) => (
               <tr key={rowIndex} className="hover:bg-gray-50">
-                {column.map((col, colIndex) => {
-                  if (col === "Marks") {
-                    return (
-                      <td
-                        key={colIndex}
-                        className="px-4 py-2 border border-gray-200"
-                      >
-                        <input
-                          type="number"
-                          id={rowIndex}
-                          name={row["Student Id"]}
-                          step="0.01"
-                          value={row[col]}
-                          max={detail["Max Marks"]}
-                          min={0}
-                          onWheel={(e)=>e.target.blur()}
-                          onChange={handelResultChange}
-                        />
-                        <button
-                          type="submit"
-                          onClick={handelResultUpdate}
-                          value={row[col]}
-                          id={rowIndex}
-                          name={row["Student Id"]}
-                          className="ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold p-1 rounded-lg shadow-md transition-all duration-200"
-                        >
-                          Update
-                        </button>
-                      </td>
-                    );
-                  } else
-                    return (
-                      <td
-                        key={colIndex}
-                        className="px-4 py-2 border border-gray-200"
-                      >
-                        {row[col]}
-                      </td>
-                    );
-                })}
+                <td className="px-4 py-2 border border-gray-200">
+                  {row["Student Id"]}
+                </td>
+                <td className="min-w-28 px-4 py-2 border border-gray-200">
+                  <input
+                    type="number"
+                    id={rowIndex}
+                    name={row["Student Id"]}
+                    step="0.01"
+                    value={row["Marks"]}
+                    max={detail["Max Marks"]}
+                    min={0}
+                    onWheel={(e) => e.target.blur()}
+                    onChange={handelResultChange}
+                  />
+                </td>
+                <td className="px-4 py-2 border border-gray-200">
+                  <button
+                    type="submit"
+                    onClick={handelResultUpdate}
+                    value={row["Marks"]}
+                    id={rowIndex}
+                    name={row["Student Id"]}
+                    className="min-w-24 bg-gray-500 hover:bg-gray-700 text-white font-bold p-1 rounded-lg shadow-md transition-all duration-200"
+                  >
+                    {row["Update"]}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

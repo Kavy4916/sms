@@ -17,6 +17,7 @@ const CourseResult = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       try {
         api.post("/student/courseResult",{sessionId, courseId}).then((response) => {

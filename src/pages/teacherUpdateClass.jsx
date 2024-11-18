@@ -12,6 +12,7 @@ const TeacherClassAttendance = () => {
   const classId = query.split("_")[1];
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [data, setData] = useState([{}]);
   const [detail, setDetail] = useState(null);
   const [subjectType, setSubjectType] = useState(null);
@@ -21,6 +22,7 @@ const TeacherClassAttendance = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       try {
         const response = await api.get("/teacher/class/update", {
@@ -59,7 +61,11 @@ const TeacherClassAttendance = () => {
       teachesId,
     });
     if (response.data === "updated") {
-      response = await api.get("/teacher/class/update", {
+        setSuccess("Class updated successfully");
+        setTimeout(() => {
+          setSuccess(null);
+        }, 2000);
+        response = await api.get("/teacher/class/update", {
         params: { teachesId, classId },
       });
       const date = new Date(response.data.detail.Date);
@@ -103,6 +109,7 @@ const TeacherClassAttendance = () => {
         teachesId,
       });
       if (response?.data === "deleted") {
+        window.scrollTo(0,0);
         setMessage("Deleted Successfully");
         setTimeout(() => {
           setMessage(null);
@@ -233,6 +240,7 @@ const TeacherClassAttendance = () => {
             </div>
           </div>
         </div>
+        {success && <p className="w-full px-3 py-2 sm:py-3 text-center text-green-500 text-md my-1">{success}</p>}
         <div className=" mt-4 lg:flex lg:justify-around">
           <button
             type="button"

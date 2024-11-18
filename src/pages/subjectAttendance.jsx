@@ -18,6 +18,7 @@ const SubjectAttendance = () => {
 
   useEffect(() => {
     const fetch = async () => {
+      window.scrollTo(0,0);
       api
         .get("/student/attendance/subject", {
           params: { subjectId },

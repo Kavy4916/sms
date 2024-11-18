@@ -14,6 +14,7 @@ const TeacherAllClass = ()=>{
     const [link, setLink] = useState(null);
 
     useEffect(()=>{
+        window.scrollTo(0,0);
         const fetch = async ()=>{
             try{
             const response = await api.get("/teacher/class/all",{

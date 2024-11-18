@@ -12,6 +12,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    window.scrollTo(0,0);
     const fetch = async () => {
       api
         .get("/student/check")

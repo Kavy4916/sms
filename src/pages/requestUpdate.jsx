@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar.jsx";
 import Message from "../components/message.jsx";
 import api from "../utils/connection.js";
@@ -11,6 +11,19 @@ const RequestUpdate = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0,0);
+    const fetch = async () => {
+      api
+        .get("/student/check")
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {});
+    };
+    fetch();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

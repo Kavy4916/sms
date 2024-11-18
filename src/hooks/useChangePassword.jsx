@@ -19,6 +19,12 @@ const useChangePassword = () => {
           newPassword: newPassword,
         })
         .then((response) => {
+          if(response.status === 201){
+            setMessage(response.data.message);
+            setTimeout(()=>{
+              navigate("/")
+            },2000)
+          }
           if(response.data.message) setError(response.data.message)
           else navigate("/");
         })
