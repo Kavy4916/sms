@@ -37,7 +37,7 @@ const Attendance = () => {
           setLoading(false);
           setTimeout(() => {
             navigate("/login");
-          }, 3000);
+          }, 2000);
         });
     };
     fetch();
